@@ -1,16 +1,22 @@
 function filter_data
 %calls filter_function
-
-subjects = [203 205 206 207 208 212 214 219 221 224 225 226 227 228 231 232];
-mask='/home/danx/Documents/FAISCO003M2Z/bin5_mask.nii.gz'; %whole brain mask
-
+sessions = 4
+subjects = [1];
+mask='/Volumes/Aidas_HDD/MRI_data/S1/Analysis/mask.nii'; %whole brain mask
+%base='/Volumes/Aidas_HDD/MRI_data/' 
+base = '/Volumes/Aidas_HDD/MRI_data/S1/MVPA_analysis/'
+file_prefix = 'swrad'
 for sub=subjects
-    sub=int2str(sub);
-    disp(['loading sub ' sub ' data'])
+ for session = 1 : sessions
+    %sub=int2str(sub);
+    disp(['loading subject ' int2str(sub) ' sesssion ' int2str(session) ' data'])
     
-    base='/home/danx/Documents/FAISCO003M2Z/';
-    input_path=[base sub '/sess_1/'];
-    list=dir([input_path 's4*.nii']);
+    %base='/Volumes/Aidas_HDD/MRI_data/'
+    %input_path=[base 'S' sub '/functional' '/sess4/']
+    input_path=[base 'S' int2str(sub) '/functional' '/sess' num2str(session) '/']
+    %list=dir([input_path 'sm6*.nii']); %which files to take i
+    list=dir([input_path [file_prefix '*.nii']]);
+    
     
     file=[input_path list(1).name];
     data=cosmo_fmri_dataset(file, 'mask', mask, 'targets', randi(3), 'chunks', randi(3));
@@ -21,12 +27,12 @@ for sub=subjects
         data=cosmo_stack({data fmri}); 
     end
     
-    disp(['filtering sub ' sub])
-    data.samples=filter_function(data.samples); % only works if signal processing toolbox is installed
-    
+    disp(['filtering sub ' int2str(sub) ' sesssion ' int2str(session)])
+    data.samples=filter_function(data.samples); %Call the other function    
     output_path=input_path;
-    output=['f50hz_' list(1).name(1:17) '.nii'];
-    output_fn=fullfile(output_path, output);
+    output=['f50hz_' list(1).name];%output_fn=fullfile(output_path, output);
+    output_fn=fullfile(output_path, output); %
     cosmo_map2fmri(data,output_fn);
-        
+ end
 end
+disp('done')
