@@ -1,10 +1,10 @@
 function filter_data
 %calls filter_function
-sessions = 4
-subjects = [1];
-mask='/Volumes/Aidas_HDD/MRI_data/S1/Analysis/mask.nii'; %whole brain mask
+sessions = 5
+subjects = [3];
+mask='/Volumes/Aidas_HDD/MRI_data/S3/Analysis/mask.nii'; %whole brain mask
 %base='/Volumes/Aidas_HDD/MRI_data/' 
-base = '/Volumes/Aidas_HDD/MRI_data/S1/MVPA_analysis/'
+base = '/Volumes/Aidas_HDD/MRI_data/'
 file_prefix = 'swrad'
 for sub=subjects
  for session = 1 : sessions
